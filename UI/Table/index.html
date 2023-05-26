@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <link
+      rel="stylesheet"
+      href="../../Assets/Lib/bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../Assets/Lib/DataTables/datatables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../Assets/Lib/fontawesome-free-6.4.0-web/fontawesome-free-6.4.0-web/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../Assets/Lib/SweetAlert2/sweetalert2.min.css"
+    /> -->
+    <!-- <style>
+      #example_filter {
+        display: inline;
+        margin-left: 20px !important;
+        float: right;
+      }
+    </style> -->
+
+    <style>
+      /* DataTables styling */
+      table.dataTable thead tr {
+        background-color: aliceblue;
+      }
+
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_length label {
+        padding: 0.25rem;
+        margin: 0;
+      }
+
+      .dataTables_wrapper table.dataTable td,
+      .dataTables_wrapper table.dataTable th {
+        padding: 0.25rem;
+        margin: 0;
+      }
+
+      .dataTables_wrapper .dataTables_scroll {
+        margin: 0;
+      }
+
+      .dataTables_wrapper .dataTable {
+        width: 100%;
+      }
+
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_length label {
+        color: #212529;
+      }
+
+      .dataTables_wrapper table.dataTable td,
+      .dataTables_wrapper table.dataTable th {
+        background-color: #fff;
+      }
+
+      .dataTables_wrapper table.dataTable tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      .dataTables_wrapper table.dataTable tbody td:first-child {
+        background-color: #f1f1f1;
+      }
+
+      /* Search textbox styling */
+      .dataTables_wrapper .dataTables_filter {
+        text-align: right;
+        margin-bottom: 10px;
+      }
+
+      .dataTables_wrapper .dataTables_filter label {
+        position: relative;
+      }
+
+      .dataTables_wrapper .dataTables_filter input.form-control {
+        padding-right: 30px;
+      }
+
+      .dataTables_wrapper .dataTables_filter .search-icon {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        color: #999;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-3">
+      <div class="div bg-light p-3 rounded shadow">
+        <table
+          id="example"
+          class="table table-header table-hover table-striped table-bordered compact"
+          style="width: 100%"
+        >
+          <tfoot>
+            <tr>
+              <th filter="false"></th>
+              <th filter="false"></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
+        </table>
+        <!-- <div class="dropup-center dropup" tool-type="combobox">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-selected-status="hii"
+          >
+            hii
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <button class="dropdown-item" data-status="bye">bye</button>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+    <!-- <script src="../../Assets/Lib/SweetAlert2/sweetalert2.all.min.js"></script>
+    <script src="../../Assets/Lib/Jquery/jquery-3.7.0.min.js"></script>
+    <script src="../../Assets/Lib/bootstrap-5.3.0-alpha3-dist/js/bootstrap.min.js"></script>
+    <script src="../../Assets/Lib/DataTables/datatables.min.js"></script>
+    <script src="../../Assets/Lib/Moment.js/moment.min.js"></script> -->
+    <script src="plugin.js"></script>
+    <script>
+      // $('div[tool-type="combobox"] ul li button').click((e) => {
+      //   $(e.target)
+      //     .closest('div[tool-type="combobox"]')
+      //     .find("button[data-selected-status]")
+      //     .html(e.target.dataset.status);
+      // });
+    </script>
+    <script>
+      var table;
+      $(document).ready(function () {
+        table = $("#example").DataTable({
+          processing: true,
+          // serverSide: true,
+          responsive: true,
+          //for select rows
+          // select: true,
+          //for scroller extention
+          // deferRender: true,
+          // scrollY: 200,
+          // scrollCollapse: true,
+          // scroller: true,
+          //for rowreorder
+          // rowReorder: true,
+          //for searchpanes
+          // searchPanes: true,
+          //for  searchBuilder
+          // searchBuilder: true,
+          //for keytable
+          // keys: true,
+          dom:
+            "<'row'" +
+            "<'col-sm-12 col-md-3 col-lg-3 float-start'l>" +
+            "<'col-sm-12 col-md-6 col-lg-6 text-center'B>" +
+            "<'col-sm-12 col-md-3 col-lg-3'f>" +
+            ">" +
+            "<'row'" +
+            "<'col-sm-12 col-md-12'tr>" +
+            ">" +
+            "<'row'" +
+            "<'col-sm-12 col-md-5'i>" +
+            "<'col-sm-12 col-md-7'p>" +
+            ">",
+          buttons: [
+            {
+              text: '<i class="fa-solid fa-square-plus"></i>',
+              titleAttr: "Add New",
+              className: "",
+              action: (e) => {
+                Swal.fire({
+                  title: "Submit Form",
+                  html: `
+            <form id="submitForm">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name:</label>
+          <input type="text" class="form-control" id="name" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="position" class="form-label">Position:</label>
+          <input type="text" class="form-control" id="position" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="salary" class="form-label">Salary:</label>
+          <input type="text" class="form-control" id="salary" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="start_date" class="form-label">Start Date:</label>
+          <input type="date" class="form-control" id="start_date" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="office" class="form-label">Office:</label>
+          <input type="text" class="form-control" id="office" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="extn" class="form-label">Extension:</label>
+          <input type="text" class="form-control" id="extn" required>
+        </div>
+      </form>
+
+          `,
+                  confirmButtonText: "Submit",
+                  focusConfirm: false,
+                  preConfirm: () => {
+                    const name = Swal.getPopup().querySelector("#name").value;
+                    const position =
+                      Swal.getPopup().querySelector("#position").value;
+                    const salary =
+                      Swal.getPopup().querySelector("#salary").value;
+                    const start_date =
+                      Swal.getPopup().querySelector("#start_date").value;
+                    const office =
+                      Swal.getPopup().querySelector("#office").value;
+                    const extn = Swal.getPopup().querySelector("#extn").value;
+                    table.row
+                      .add([name, position, salary, start_date, office, extn])
+                      .draw(false);
+                  },
+                });
+              },
+            },
+            {
+              extend: "copyHtml5",
+              text: '<i class="fa-solid fa-clipboard"></i>',
+              titleAttr: "Copy to clipboard",
+              className: "",
+            },
+            {
+              extend: "excelHtml5",
+              text: '<i class="fa-solid fa-file-excel"></i>',
+              titleAttr: "Export in excel",
+              className: "",
+            },
+            {
+              extend: "csvHtml5",
+              text: '<i class="fa-solid fa-file-csv"></i>',
+              titleAttr: "Export in csv",
+              className: "",
+            },
+            {
+              extend: "pdfHtml5",
+              text: '<i class="fa-solid fa-file-pdf"></i>',
+              titleAttr: "Export in pdf",
+              className: "",
+            },
+            {
+              extend: "print",
+              text: '<i class="fa-solid fa-print"></i>',
+              titleAttr: "Print Data",
+              className: "",
+            },
+            {
+              extend: "colvis",
+              text: '<i class="fa-solid fa-eye-low-vision"></i>',
+              titleAttr: "Hide Columns",
+              className: "",
+            },
+          ],
+          // ajax: "/UI/Table/data.json",
+          ajax: {
+            url: "/UI/Table/data.json",
+            datatype: "json",
+            dataSrc: function (data) {
+              console.log(data);
+              return data.data;
+            },
+          },
+          columns: [
+            {
+              title:
+                '<input type="checkbox" name="" id="selectAll" class="form-check" onclick="SelectAll()">',
+              data: "id",
+              searchable: true,
+              sortable: false,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return '<input type="checkbox" name="" class="form-check trselect" onclick="Select(this)" id="">';
+              },
+            },
+            {
+              title: "ID",
+              data: "id",
+              searchable: true,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  (meta.row + 1) +
+                  '">' +
+                  (meta.row + 1) +
+                  "</span>"
+                );
+              },
+            },
+            {
+              title: "Name",
+              data: "name",
+              searchable: true,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  data +
+                  '">' +
+                  data +
+                  "</span>"
+                );
+              },
+            },
+            {
+              title: "Position",
+              data: "position",
+              searchable: true,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  data +
+                  '">' +
+                  data +
+                  "</span>"
+                );
+              },
+            },
+            {
+              title: "Salary",
+              data: "salary",
+              searchable: true,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  data +
+                  '">' +
+                  data +
+                  "</span>"
+                );
+              },
+            },
+            {
+              title: "Start Date",
+              data: "start_date",
+              searchable: true,
+              className: "padding-size",
+              render: function parseJsonDate(jsonDateString) {
+                var date = moment(jsonDateString)
+                  .format("MM-DD-YYYY")
+                  .toUpperCase();
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  date +
+                  '">' +
+                  date +
+                  "</span>"
+                );
+              },
+            },
+            {
+              title: "Office",
+              data: "office",
+              searchable: true,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  data +
+                  '">' +
+                  data +
+                  "</span>"
+                );
+              },
+            },
+            {
+              title: "extn",
+              data: "extn",
+              searchable: true,
+              className: "padding-size",
+              render: function (data, type, full, meta) {
+                return (
+                  '<span data-toggle="tooltip" title="' +
+                  data +
+                  '">' +
+                  data +
+                  "</span>"
+                );
+              },
+            },
+          ],
+          initComplete: function () {
+            $(".sorting_disabled").removeClass("sorting_asc");
+            $(".sorting_disabled").removeClass("sorting");
+            $(".sorting_disabled").removeClass("sorting_dsc");
+            this.api()
+              .columns()
+              .every(function () {
+                var column = this;
+                if (
+                  column.footer().getAttribute("filter") === "true" ||
+                  column.footer().getAttribute("filter") === null
+                ) {
+                  var select = $(
+                    `<div class="dropup-center dropup" tool-type="combobox">
+          <button
+            class="btn btn-secondary btn-sm dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-selected-status="hii"
+          >
+           ${column.header().textContent}
+          </button>
+          <ul class="dropdown-menu" style="height:150px;overflow:auto;">
+            <li>
+              <button class="dropdown-item bg-secondary" data-status="">${
+                column.header().textContent
+              }</button>
+            </li>
+          </ul>
+        </div>`
+                    // '<select class="form-select"><option value=""></option></select>'
+                  )
+                    .appendTo($(column.footer()))
+                    .on("click", function (e) {
+                      $(e.target)
+                        .closest('div[tool-type="combobox"]')
+                        .find("button[data-selected-status]")
+                        .html(e.target.dataset.status);
+                      $(e.target)
+                        .closest('div[tool-type="combobox"]')
+                        .find("button[data-selected-status]")
+                        .attr("data-selected-status", e.target.dataset.status);
+                      var val = $.fn.dataTable.util.escapeRegex(
+                        e.target.dataset.status
+                      );
+
+                      column
+                        .search(val ? "^" + val + "$" : "", true, false)
+                        .draw();
+                    });
+
+                  column
+                    .data()
+                    .unique()
+                    .sort()
+                    .each(function (d, j) {
+                      select
+                        .find("ul.dropdown-menu")
+                        .append(
+                          '<button class="dropdown-item" data-status="' +
+                            d +
+                            '">' +
+                            d +
+                            "</button>"
+                        );
+                    });
+                }
+              });
+          },
+        });
+        // for searchpanes
+        // table.searchPanes.container().prependTo(table.table().container());
+        // table.searchPanes.resizePanes();
+        //for searchbuilder
+        // table.searchBuilder.container().prependTo(table.table().container());
+      });
+      const SelectAll = (e) => {
+        //console.log('hello');
+        $(".trselect").prop("checked", $("#selectAll").prop("checked"));
+        if ($("#selectAll").prop("checked") == true) {
+          $(".trselect").closest("tr").addClass("selected");
+        } else {
+          $(".trselect").closest("tr").removeClass("selected");
+        }
+      };
+      const Select = (e) => {
+        $(e).closest("tr").toggleClass("selected");
+      };
+      $(document).ready(function () {
+        // Add search icon
+        $(".dataTables_filter label").append(
+          '<span class="search-icon"><i class="fas fa-search"></i></span>'
+        );
+      });
+    </script>
+  </body>
+</html>

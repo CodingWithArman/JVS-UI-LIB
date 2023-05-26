@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="input-group">
+      <label class="input-group-text" for="">Image</label>
+      <img
+        src=""
+        alt=""
+        class="form-control"
+        fileCate="img"
+        style="
+          max-width: 58px;
+          max-height: 58px;
+          min-width: 58px;
+          min-height: 58px;
+        "
+      />
+      <input type="hidden" for="photo" id="photo" fileCate="img" />
+      <button
+        class="input-group-text btn btn-light"
+        id=""
+        type="button"
+        fileCate="img"
+        onclick="fileUpload('img')"
+      >
+        Upload
+      </button>
+    </div>
+    <script src="plugin.js"></script>
+    <script>
+      function fileUpload(fileCate) {
+        let myPromise = new Promise((resolve, reject) => {
+          let DOM = `<input type="hidden" id="fileCate" value="${fileCate}"><div class="card"><div class="card-header"><center><h1><i class="fa-solid fa-camera"></i></h1></center></div><div class="card-body"><div id="my_camera" class="" style="width:93%;height:250px;margin:auto"><div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div></div><div id="my_result" class="mt-4" style="width:78%;height:auto;margin:auto"><center><i class="fa-regular fa-face-smile-beam" style="font-size:13rem;margin-top:10%"></i></center></div></div><div class="card-footer"><a href="javascript:void(take_snapshot())">Take Snapshot :)</a><button class="btn btn-primary" onclick='Upload("photo")'>Upload</button></div><div class="card-body"><center><h2>OR</h2></center><label for="Ufile">Image</label><input type="file" id="Ufile" class="form-control"></div><div class="card-footer"><button class="btn btn-primary" onclick='Upload("file")'>Upload</button></div></div>`; //DOM
+          Alert2.fire({
+            header: "",
+            title: "Upload" + fileCate,
+            message: DOM,
+            modalclass: "bg-success",
+            btn: [
+              {
+                key: "",
+                text: "Close",
+                type: "",
+                className: "btn btn-secondary",
+                btnposition: "AlertFooter",
+                action: () => {
+                  Webcam.reset();
+                  modal.hide();
+                },
+              },
+            ],
+            prop: {
+              modal: {
+                keyboard: true,
+                backdrop: "static",
+                focus: true,
+                style: {
+                  // Set the width of the modal
+                  //width: '800px',
+                  // Set the maximum width of the modal
+                  //maxWidth: '100%',
+                  // Set the height of the modal
+                  //height: '600px',
+                  // Set the maximum height of the modal
+                  //maxHeight: '100vh'
+                },
+                closable: false,
+              },
+            },
+          });
+          resolve();
+        });
+        myPromise.then(function () {
+          setTimeout(() => {
+            Webcam.attach("#my_camera");
+            //alert('okay');
+          }, 1000);
+        });
+      }
+      function take_snapshot() {
+        Webcam.snap(function (data_uri) {
+          document.getElementById("my_result").innerHTML =
+            '<img src="' +
+            data_uri +
+            '" style="width:calc(' +
+            $("#my_camera video").width() +
+            "px - 19.87%);height:" +
+            $("#my_camera video").height() +
+            'px"/> ';
+        });
+      }
+      function Upload(type) {
+        const fileCate = $("#fileCate").val();
+        const preview = document.querySelector(
+          "img[fileCate='" + fileCate + "']"
+        );
+        const label = $('label[fileCate="' + $("#fileCate").val() + '"]');
+        const input = $('input[fileCate="' + $("#fileCate").val() + '"]');
+        if (type == "file") {
+          const file = document.querySelector("#Ufile").files[0];
+
+          const name = file.name;
+          const lastDot = name.lastIndexOf(".");
+
+          const fileName = name.substring(0, lastDot);
+          const ext = name.substring(lastDot + 1);
+
+          const reader = new FileReader();
+
+          reader.addEventListener(
+            "load",
+            () => {
+              // convert image file to base64 string
+              preview.src = reader.result;
+              input.val(reader.result);
+            },
+            false
+          );
+
+          if (file) {
+            reader.readAsDataURL(file);
+          }
+          //label.html(fileName);
+
+          Webcam.reset();
+          modal.hide();
+        } else {
+          preview.src = $("#my_result img").attr("src");
+          input.val($("#my_result img").attr("src"));
+          //label.html("Camera");
+          //document.getElementById('my_result').innerHTML = '<img src="' + data_uri + '"/> ';
+          Webcam.reset();
+
+          modal.hide();
+        }
+      }
+    </script>
+  </body>
+</html>

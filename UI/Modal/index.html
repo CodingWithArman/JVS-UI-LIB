@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="plugin.js"></script>
+    <script src="modal.js"></script>
+    <script>
+      Alert2.fire({
+        header: "Header",
+        title: "Title",
+        message: "Your Message Here",
+        modalclass: "bg-success",
+        btn: [
+          {
+            key: "",
+            text: "Fire",
+            type: "",
+            className: "btn btn-secondary",
+            btnposition: "AlertFooter",
+            action: () => {
+              alert("boommm!!!!!");
+            },
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>
